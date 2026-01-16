@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar.jsx'
+import Manager from './components/Manager.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -8,9 +9,7 @@ function App() {
   return (
     <>
     <Navbar />
-      <div className='text-purple-400 text-2xl font-bold'>
-        Hello world!!
-      </div>
+    <Manager />
     </>
   )
 }
