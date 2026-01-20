@@ -1,8 +1,31 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 
 const Manager = () => {
-    const handleClick = () => {
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [form, setform] = useState({ site: "", username: "", password: "" })
+    const [passwordArray, setpasswordArray] = useState([]);
 
+    useEffect(() => {
+        let passwords = JSON.parse(localStorage.getItem("passwords")) || [];
+        setpasswordArray(passwords);
+    }, [])
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setform({ ...form, [name]: value })
+    }
+
+    const savePassword = () => {
+        console.log(passwordArray)
+        setpasswordArray([...passwordArray, form]);
+        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));
+        setform({ site: "", username: "", password: "" })
+    }
+
+    const showPassword = () => {
+        alert("show password")
     }
     return (
         <>
@@ -11,22 +34,23 @@ const Manager = () => {
             </div>
 
             <div className='w-2/3 m-auto mt-12 flex flex-col gap-1'>
-                <input type="text" name='website' id='url' placeholder='Website URL' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2' />
+                <input value={form.site} onChange={handleChange} type="text" name='site' id='url' placeholder='Website URL' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2' />
                 <div className='flex gap-1'>
-                    <input type="text" name='username' id='uname' placeholder='Username' className='p-2 w-1/2 rounded-md border-[rgba(173,109,244,0.5)] border-2' />
-                    <div className='p-2 w-1/2 rounded-md border-[rgba(173,109,244,0.5)] border-2 flex items-center justify-between'>
-                        <input type="text" name='password' id='pw' placeholder='Password' />
+                    <input value={form.username} onChange={handleChange} type="text" name='username' id='uname' placeholder='Username' className='p-2 w-1/2 rounded-md border-[rgba(173,109,244,0.5)] border-2' />
+                    <div className='relative w-1/2'>
+                        <input value={form.password} onChange={handleChange} type="text" name='password' id='pw' placeholder='Password' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2 pr-12' />
                         <lord-icon
+                            onClick={showPassword}
                             src="https://cdn.lordicon.com/dicvhxpz.json"
                             trigger="morph"
                             stroke="bold"
                             state="morph-cross"
-                            colors="primary:#c69cf4,secondary:#c69cf4">
+                            colors="primary:#c69cf4,secondary:#c69cf4"
+                            className='absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer'>
                         </lord-icon>
                     </div>
-
                 </div>
-                <button onClick={handleClick()} className='bg-[rgba(173,109,244)] p-3 rounded-md text-white font-bold hover:bg-[#8e4ed7] flex items-center justify-center gap-2'>
+                <button onClick={savePassword} className='bg-[rgba(173,109,244)] p-3 rounded-md text-white font-bold hover:bg-[#8e4ed7] flex items-center justify-center gap-2'>
                     Save
                     {/* <lord-icon
                         src="https://cdn.lordicon.com/rnbuzxxk.json"
@@ -45,6 +69,29 @@ const Manager = () => {
                         style={{ width: "24px", height: "24px" }}>
                     </lord-icon>
                 </button>
+            </div>
+            <div className="passwords w-2/3 m-auto mt-12">
+                <h2 className='font-bold text-[#9159d1] text-2xl'>Your Saved Passwords</h2>
+                {passwordArray.length === 0 && <p className='mt-4 text-gray-500'>No passwords saved yet.</p>}
+                {passwordArray.length > 0 &&
+                    <table className="table-auto w-full m-auto border border-[rgba(173,109,244,0.5)] rounded-md">
+                        <thead className='bg-[#9159d1] text-white font-bold w-full'>
+                            <tr>
+                                <th className='py-2'>Website URL</th>
+                                <th className='py-2'>Username</th>
+                                <th className='py-2'>Password</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {passwordArray.map((item, index) => (
+                                <tr key={index} className='border-t border-[rgba(173,109,244,0.5)]'>
+                                    <td className='text-center min-w-28 py-3'><a href={item.site}>{item.site}</a></td>
+                                    <td className='text-center min-w-28 py-3'>{item.username}</td>
+                                    <td className='text-center min-w-28 py-3'>{item.password}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>}
             </div>
         </>
     )
