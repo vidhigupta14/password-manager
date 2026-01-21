@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 
 const Manager = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -30,14 +31,35 @@ const Manager = () => {
 
     const copyText = (text) => {
         navigator.clipboard.writeText(text).then(() => {
-            alert("Copied to clipboard");
+            toast('Copied to clipboard!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
         }).catch(err => {
             alert("Failed to copy text: ", err);
         });
     }
-    
+
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className="absolute top-0 -z-10 h-full w-full bg-white">
                 <div className="absolute bottom-auto left-auto right-0 top-0 h-125 w-125 -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
             </div>

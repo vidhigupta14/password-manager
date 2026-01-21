@@ -1,0 +1,4 @@
+/* Toast progress bar styling to match theme */
+.Toastify__progress-bar {
+    background: linear-gradient(to right, #9159d1, #c69cf4) !important;
+}
