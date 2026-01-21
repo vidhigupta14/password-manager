@@ -27,6 +27,15 @@ const Manager = () => {
     const showPassword = () => {
         alert("show password")
     }
+
+    const copyText = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Copied to clipboard");
+        }).catch(err => {
+            alert("Failed to copy text: ", err);
+        });
+    }
+    
     return (
         <>
             <div className="absolute top-0 -z-10 h-full w-full bg-white">
@@ -86,18 +95,38 @@ const Manager = () => {
                             {passwordArray.map((item, index) => (
                                 <tr key={index} className='border-t border-[rgba(173,109,244,0.5)]'>
                                     <td className='text-center min-w-28 py-3'>
-                                        <div>
-                                            <a href={item.site}>{item.site}</a>
+                                        <a href={item.site} target="_blank" rel="noopener noreferrer" className='text-[#9159d1] hover:text-[#8747cf] underline'>{item.site}</a>
+                                    </td>
+                                    <td className='text-center min-w-28 py-3'>
+                                        <div className='flex items-center gap-2 justify-center'>
+                                            {item.username}
                                             <lord-icon
+                                                onClick={() => { copyText(item.username) }}
+                                                className='cursor-pointer'
                                                 src="https://cdn.lordicon.com/hmqxevgf.json"
                                                 trigger="hover"
-                                                colors="primary:#c69cf4,secondary:#a866ee"
-                                                style="width:250px;height:250px">
+                                                stroke="bold"
+                                                colors="primary:#a866ee,secondary:#c69cf4"
+                                                alt="copy-username"
+                                                style={{ width: "16px", height: "16px", marginLeft: "8px", cursor: "pointer" }}>
                                             </lord-icon>
                                         </div>
                                     </td>
-                                    <td className='text-center min-w-28 py-3'>{item.username}</td>
-                                    <td className='text-center min-w-28 py-3'>{item.password}</td>
+                                    <td className='text-center min-w-28 py-3'>
+                                        <div className='flex items-center gap-2 justify-center'>
+                                            {item.password}
+                                            <lord-icon
+                                                onClick={() => { copyText(item.password) }}
+                                                className='cursor-pointer'
+                                                src="https://cdn.lordicon.com/hmqxevgf.json"
+                                                trigger="hover"
+                                                stroke="bold"
+                                                colors="primary:#a866ee,secondary:#c69cf4"
+                                                alt="copy-username"
+                                                style={{ width: "16px", height: "16px", marginLeft: "8px", cursor: "pointer" }}>
+                                            </lord-icon>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
