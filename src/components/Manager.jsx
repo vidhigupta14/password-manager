@@ -74,7 +74,7 @@ const Manager = () => {
                 <h2 className='font-bold text-[#9159d1] text-2xl'>Your Saved Passwords</h2>
                 {passwordArray.length === 0 && <p className='mt-4 text-gray-500'>No passwords saved yet.</p>}
                 {passwordArray.length > 0 &&
-                    <table className="table-auto w-full m-auto border border-[rgba(173,109,244,0.5)] rounded-md">
+                    <table className="table-auto w-full m-auto border border-[rgba(173,109,244,0.5)] rounded-md overflow-hidden">
                         <thead className='bg-[#9159d1] text-white font-bold w-full'>
                             <tr>
                                 <th className='py-2'>Website URL</th>
@@ -85,7 +85,17 @@ const Manager = () => {
                         <tbody>
                             {passwordArray.map((item, index) => (
                                 <tr key={index} className='border-t border-[rgba(173,109,244,0.5)]'>
-                                    <td className='text-center min-w-28 py-3'><a href={item.site}>{item.site}</a></td>
+                                    <td className='text-center min-w-28 py-3'>
+                                        <div>
+                                            <a href={item.site}>{item.site}</a>
+                                            <lord-icon
+                                                src="https://cdn.lordicon.com/hmqxevgf.json"
+                                                trigger="hover"
+                                                colors="primary:#c69cf4,secondary:#a866ee"
+                                                style="width:250px;height:250px">
+                                            </lord-icon>
+                                        </div>
+                                    </td>
                                     <td className='text-center min-w-28 py-3'>{item.username}</td>
                                     <td className='text-center min-w-28 py-3'>{item.password}</td>
                                 </tr>
