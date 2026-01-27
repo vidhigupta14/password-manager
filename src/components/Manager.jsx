@@ -7,6 +7,7 @@ const Manager = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [form, setform] = useState({ site: "", username: "", password: "" })
     const [passwordArray, setpasswordArray] = useState([]);
+    const [editing, setEditing] = useState(false);
 
     useEffect(() => {
         let passwords = JSON.parse(localStorage.getItem("passwords")) || [];
@@ -24,12 +25,19 @@ const Manager = () => {
         localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]));
         console.log([...passwordArray, form]);
         setform({ site: "", username: "", password: "" })
+        if (editing) {
+            editedPassword();
+            setEditing(false);
+        }
     }
 
     const deletePassword = (id) => {
         console.log("Deleted: ", id);
         setpasswordArray(passwordArray.filter(item => item.id !== id));
         localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)));
+        // if (editing != true) {
+        //     deletedPassword();
+        // }
     }
 
     const showPassword = () => {
@@ -43,10 +51,13 @@ const Manager = () => {
         }
     }
 
-    const editPassword = (id) => {
+    const editPassword = async (id) => {
+        setEditing(true);
         const item = passwordArray.find(item => item.id === id);
         setform({ site: item.site, username: item.username, password: item.password });
         deletePassword(id);
+        
+        // editedPassword();
     }
 
     const copyText = (text) => {
@@ -65,14 +76,46 @@ const Manager = () => {
             alert("Failed to copy text: ", err);
         });
     }
+    const deletedPassword = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast('Password deleted!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }).catch(err => {
+            alert("Failed to copy text: ", err);
+        });
+    }
+    const editedPassword = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast('Password edited!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light"
+            });
+        }).catch(err => {
+            alert("Failed to copy text: ", err);
+        });
+    }
 
     return (
         <>
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 autoClose={5000}
                 hideProgressBar={false}
-                newestOnTop={false}
+                newestOnTop={true}
                 closeOnClick={false}
                 rtl={false}
                 pauseOnFocusLoss
@@ -185,7 +228,7 @@ const Manager = () => {
                                         </lord-icon>
                                         {/* Delete */}
                                         <lord-icon
-                                            onClick={() => deletePassword(item.id)}
+                                            onClick={() => {deletePassword(item.id), deletedPassword()}} 
                                             className='cursor-pointer'
                                             src="https://cdn.lordicon.com/jzinekkv.json"
                                             trigger="hover"
