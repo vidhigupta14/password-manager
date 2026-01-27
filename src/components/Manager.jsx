@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 
 const Manager = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -19,14 +20,33 @@ const Manager = () => {
     }
 
     const savePassword = () => {
-        console.log(passwordArray)
-        setpasswordArray([...passwordArray, form]);
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));
+        setpasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
+        localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]));
+        console.log([...passwordArray, form]);
         setform({ site: "", username: "", password: "" })
     }
 
+    const deletePassword = (id) => {
+        console.log("Deleted: ", id);
+        setpasswordArray(passwordArray.filter(item => item.id !== id));
+        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)));
+    }
+
     const showPassword = () => {
-        alert("show password")
+        // alert("show password")
+        const passwordInput = document.getElementById("pw");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+
+    const editPassword = (id) => {
+        const item = passwordArray.find(item => item.id === id);
+        setform({ site: item.site, username: item.username, password: item.password });
+        deletePassword(id);
     }
 
     const copyText = (text) => {
@@ -65,11 +85,11 @@ const Manager = () => {
             </div>
 
             <div className='w-2/3 m-auto mt-12 flex flex-col gap-1'>
-                <input value={form.site} onChange={handleChange} type="text" name='site' id='url' placeholder='Website URL' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2' />
+                <input value={form.site} onChange={handleChange} type="text" name='site' id='site' placeholder='Website URL' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2' />
                 <div className='flex gap-1'>
-                    <input value={form.username} onChange={handleChange} type="text" name='username' id='uname' placeholder='Username' className='p-2 w-1/2 rounded-md border-[rgba(173,109,244,0.5)] border-2' />
+                    <input value={form.username} onChange={handleChange} type="text" name='username' id='username' placeholder='Username' className='p-2 w-1/2 rounded-md border-[rgba(173,109,244,0.5)] border-2' />
                     <div className='relative w-1/2'>
-                        <input value={form.password} onChange={handleChange} type="text" name='password' id='pw' placeholder='Password' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2 pr-12' />
+                        <input value={form.password} type="password" onChange={handleChange} name='password' id='pw' placeholder='Password' className='p-2 w-full rounded-md border-[rgba(173,109,244,0.5)] border-2 pr-12' />
                         <lord-icon
                             onClick={showPassword}
                             src="https://cdn.lordicon.com/dicvhxpz.json"
@@ -111,6 +131,7 @@ const Manager = () => {
                                 <th className='py-2'>Website URL</th>
                                 <th className='py-2'>Username</th>
                                 <th className='py-2'>Password</th>
+                                <th className='py-2'>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,6 +169,31 @@ const Manager = () => {
                                                 style={{ width: "16px", height: "16px", marginLeft: "8px", cursor: "pointer" }}>
                                             </lord-icon>
                                         </div>
+                                    </td>
+                                    <td className='text-center min-w-28 py-3 flex items-center justify-center gap-3'>
+                                        {/* Edit */}
+                                        <lord-icon
+                                            onClick={() => editPassword(item.id)}
+                                            className='cursor-pointer'
+                                            src="https://cdn.lordicon.com/exymduqj.json"
+                                            trigger="hover"
+                                            stroke="bold"
+                                            state="hover-line"
+                                            colors="primary:#a866ee,secondary:#c69cf4"
+                                            alt="edit"
+                                            style={{ width: "32px", height: "32px", cursor: "pointer" }}>
+                                        </lord-icon>
+                                        {/* Delete */}
+                                        <lord-icon
+                                            onClick={() => deletePassword(item.id)}
+                                            className='cursor-pointer'
+                                            src="https://cdn.lordicon.com/jzinekkv.json"
+                                            trigger="hover"
+                                            stroke="bold"
+                                            colors="primary:#a866ee,secondary:#c69cf4"
+                                            alt="delete"
+                                            style={{ width: "28px", height: "28px", cursor: "pointer" }}>
+                                        </lord-icon>
                                     </td>
                                 </tr>
                             ))}
