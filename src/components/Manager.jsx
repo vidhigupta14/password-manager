@@ -21,6 +21,10 @@ const Manager = () => {
     }
 
     const savePassword = () => {
+        if (form.site === "" || form.username === "" || form.password === "") {
+            alert("Please fill in all fields.");
+            return;
+        }
         setpasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
         localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]));
         console.log([...passwordArray, form]);
@@ -29,6 +33,16 @@ const Manager = () => {
             editedPassword();
             setEditing(false);
         }
+        toast('Password saved successfully!', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+        });
     }
 
     const deletePassword = (id) => {
@@ -56,7 +70,7 @@ const Manager = () => {
         const item = passwordArray.find(item => item.id === id);
         setform({ site: item.site, username: item.username, password: item.password });
         deletePassword(id);
-        
+
         // editedPassword();
     }
 
@@ -228,7 +242,7 @@ const Manager = () => {
                                         </lord-icon>
                                         {/* Delete */}
                                         <lord-icon
-                                            onClick={() => {deletePassword(item.id), deletedPassword()}} 
+                                            onClick={() => { deletePassword(item.id), deletedPassword() }}
                                             className='cursor-pointer'
                                             src="https://cdn.lordicon.com/jzinekkv.json"
                                             trigger="hover"
